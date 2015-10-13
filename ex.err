@@ -1,0 +1,90 @@
+\EUPHORIA\include\dll.e:37 in function open_dll() 
+open_dll() is not supported in Euphoria for DOS32 
+    file_name = {108'l',105'i',98'b',116't',99'c',108'l',56'8',46'.',53'5',
+46'.',115's',111'o'}
+
+... called from C:\DOCUME~1\lcecchi\Desktop\TclLib\tcllib.e:99 in function open_dll_helper()  
+    dlls = {
+             {108'l',105'i',98'b',116't',99'c',108'l',56'8',46'.',53'5',
+46'.',115's',111'o'},
+             {108'l',105'i',98'b',116't',99'c',108'l',56'8',46'.',52'4',
+46'.',115's',111'o'},
+             {116't',99'c',108'l',56'8',53'5',46'.',100'd',108'l',108'l'},
+             {116't',99'c',108'l',56'8',52'4',46'.',100'd',108'l',108'l'},
+             {116't',99'c',108'l',56'8',51'3',46'.',100'd',108'l',108'l'}
+           }
+    lib = -1
+    msg = <no value>
+    i = 1
+    i = <no value>
+
+... called from C:\DOCUME~1\lcecchi\Desktop\TclLib\tcllib.e:259 
+
+
+Global & Local Variables
+
+ \EUPHORIA\include\machine.e:
+    mem = 44726460
+    check_calls = 1
+
+ \EUPHORIA\include\get.e:
+    input_file = <no value>
+    input_string = <no value>
+    string_next = <no value>
+    ch = <no value>
+
+ \EUPHORIA\include\misc.e:
+    pretty_end_col = <no value>
+    pretty_chars = <no value>
+    pretty_start_col = <no value>
+    pretty_level = <no value>
+    pretty_file = <no value>
+    pretty_ascii = <no value>
+    pretty_indent = <no value>
+    pretty_ascii_min = <no value>
+    pretty_ascii_max = <no value>
+    pretty_line_count = <no value>
+    pretty_line_max = <no value>
+    pretty_dots = <no value>
+    pretty_fp_format = <no value>
+    pretty_int_format = <no value>
+    pretty_line = <no value>
+
+ C:\DOCUME~1\lcecchi\Desktop\TclLib\tcllib.e:
+    callbacks = {}
+    command_callbacks = {}
+    new_callback_id = 1
+    interpreter = <no value>
+    tcllib = <no value>
+    tklib = <no value>
+    c_tcl_createinterp = <no value>
+    c_tcl_init = <no value>
+    c_tcl_eval = <no value>
+    c_tcl_getstringresult = <no value>
+    c_tcl_freeresult = <no value>
+    c_tk_init = <no value>
+    c_tk_mainloop = <no value>
+    c_tcl_createcommand = <no value>
+    c_tcl_getvar = <no value>
+    c_tcl_findexecutable = <no value>
+    c_tcl_setresult = <no value>
+    c_tcl_deleteinterp = <no value>
+    c_tcl_exit = <no value>
+
+
+Traced lines leading up to the failure:
+
+\EUPHORIA\include\machine.e:156	mem = allocate(4)
+\EUPHORIA\include\machine.e:58	    return x >= 1
+\EUPHORIA\include\machine.e:108	    return machine_func(M_ALLOC, n)
+\EUPHORIA\include\machine.e:307	check_calls = 1
+C:\DOCUME~1\lcecchi\Desktop\TclLib\tcllib.e:145	callbacks = {}
+C:\DOCUME~1\lcecchi\Desktop\TclLib\tcllib.e:146	new_callback_id = 1
+C:\DOCUME~1\lcecchi\Desktop\TclLib\tcllib.e:148	command_callbacks = {}
+C:\DOCUME~1\lcecchi\Desktop\TclLib\tcllib.e:259	tcllib=open_dll_helper(TCL_LIB)
+C:\DOCUME~1\lcecchi\Desktop\TclLib\tcllib.e:96	    lib=-1
+C:\DOCUME~1\lcecchi\Desktop\TclLib\tcllib.e:98	    for i=1 to length(dlls) by 1 do
+C:\DOCUME~1\lcecchi\Desktop\TclLib\tcllib.e:99	      lib=open_dll(dlls[i])
+\EUPHORIA\include\dll.e:37	    return machine_func(M_OPEN_DLL, file_name)
+
+

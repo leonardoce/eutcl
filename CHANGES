@@ -1,0 +1,8 @@
+# Recent changes
+# --------------
+# 
+# 11/4/2007 - Forced termination of the tcl interpreter after the tk_main_loop
+# 11/4/2007 - Fixed bug with ActiveTcl 8.4/Windows. The callback functions 
+# want the cdecl specification. Why?
+# 11/4/2007 - Fixed bug in open_dll_helper error string
+# 9/4/2007 - First public release

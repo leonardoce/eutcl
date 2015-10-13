@@ -1,0 +1,148 @@
+--@+leo-ver=4-thin
+--@+node:leonardo.20070409193318:@thin simple_edit.exw
+--@@language euphoria
+with trace
+
+include tcllib.e
+include file.e
+
+--@<<exists>>
+--@+node:leonardo.20070409193728:<<exists>>
+-- Thanks to otter@full-moon.com
+function exists(sequence filename)
+    -- return true or false if file or directory is found
+    object temp_object
+    temp_object = dir(filename)
+    if atom(temp_object) then
+	return 0
+    else
+	return 1
+    end if
+end function
+--@-node:leonardo.20070409193728:<<exists>>
+--@nl
+--@<<File - New>>
+--@+node:leonardo.20070409193802:<<File - New>>
+procedure file_new()
+    tcl_execute(".txt delete \"1.0\" end")
+end procedure
+--@nonl
+--@-node:leonardo.20070409193802:<<File - New>>
+--@nl
+--@<<File - Open>>
+--@+node:leonardo.20070409193637:<<File - Open>>
+procedure file_open()
+    sequence filename, buffer
+    integer char
+    integer filenumber
+
+    filename=tcl_eval("tk_getOpenFile -title \"Choose a file to open\"")
+    if not equal(filename,"") then
+	filenumber=open(filename,"r")
+	if filenumber=-1 then
+	    puts(1,"Error opening file: "&filename)
+	    abort(1)
+	else
+	    buffer = {}
+	    while 1 do
+		char = getc(filenumber)
+		if char=-1 then
+		    exit   -- -1 is returned at end of file
+		end if
+		-- buffer = buffer & sprintf("\\x%x",{char}) 
+		buffer = buffer & {char}
+	    end while
+	    close(filenumber)
+	    tcl_execute(".txt insert \"1.0\" \"" & tcl_string_escape(buffer) & "\"")
+	    end if
+    end if
+end procedure
+--@-node:leonardo.20070409193637:<<File - Open>>
+--@nl
+--@<<File - Save>>
+--@+node:leonardo.20070409193706:<<File - Save>>
+procedure file_save()
+    sequence filename, buffer, ris
+    integer fn
+
+    -- Get the file name
+    filename=tcl_eval("tk_getSaveFile -title \"Choose the file to save\"")
+    if equal(filename,"") then
+	return
+    end if
+
+    -- Get the contents of the text box
+    buffer=tcl_eval(".txt get \"1.0\" end")
+
+    -- Open the file
+    if exists(filename) then
+	ris=tcl_eval("tk_messageBox -message \"Really overwrite this file?\" -type yesno -icon question")
+	if not equal(ris,"yes") then
+	    return
+	end if
+    end if
+
+    fn=open(filename,"w")
+    if fn=-1 then
+	tcl_execute("tk_messageBox -message \"Can't write in this file!\" -type ok -icon error")
+	return
+    end if
+
+    puts(fn, buffer)
+    close(fn)
+end procedure
+--@-node:leonardo.20070409193706:<<File - Save>>
+--@nl
+--@<<File - Exit>>
+--@+node:leonardo.20070409193828:<<File - Exit>>
+procedure file_exit()
+    abort(0)
+end procedure
+--@nonl
+--@-node:leonardo.20070409193828:<<File - Exit>>
+--@nl
+--@<<Menubar initialization>>
+--@+node:leonardo.20070409193610:<<Menubar initialization>>
+procedure menubar_init()
+    sequence callback
+
+    -- Menubar creation
+    tcl_execute("menu .menubar -type menubar")
+    tcl_execute("menu .menubar.file -tearoff 0")
+    callback=register_tcl_callback(routine_id("file_new"), {})
+    tcl_execute(".menubar.file add command -label \"New\" -command \"" & callback & "\"")
+    callback=register_tcl_callback(routine_id("file_open"), {})
+    tcl_execute(".menubar.file add command -label \"Open\" -command \"" & callback & "\"")
+    callback=register_tcl_callback(routine_id("file_save"), {})
+    tcl_execute(".menubar.file add command -label \"Save\" -command \"" & callback & "\"")
+    tcl_execute(".menubar.file add separator")
+    callback=register_tcl_callback(routine_id("file_exit"), {})
+    tcl_execute(".menubar.file add command -label \"Exit\" -command \"" & callback & "\"")
+    tcl_execute(".menubar add cascade -label \"File\" -menu .menubar.file")
+
+    -- Menubar init
+    tcl_execute(". configure -menu .menubar -width 200 -height 100")
+end procedure
+--@-node:leonardo.20070409193610:<<Menubar initialization>>
+--@nl
+--@<<Main window init>>
+--@+node:leonardo.20070409193845:<<Main window init>>
+procedure main_window_init()
+    menubar_init()
+    tcl_execute("text .txt -yscrollcommand {.vscroll set}")
+    tcl_execute("scrollbar .vscroll -command {.txt yview}")
+    tcl_execute("grid .txt -row 0 -column 0 -stick nsew")
+    tcl_execute("grid .vscroll -row 0 -column 1 -stick ns")
+    tcl_execute("grid rowconfigure . 0 -weight 1")
+    tcl_execute("grid columnconfigure . 0 -weight 1")
+    tcl_execute("wm title . \"EuTCL Example...\"")
+end procedure
+--@nonl
+--@-node:leonardo.20070409193845:<<Main window init>>
+--@nl
+
+-- Initialization and startup
+main_window_init()
+tk_main_loop()
+--@-node:leonardo.20070409193318:@thin simple_edit.exw
+--@-leo
